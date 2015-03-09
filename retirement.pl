@@ -1,22 +1,27 @@
 #!/usr/local/bin/perl
 use Time::Piece;
+use Scalar::Util qw(looks_like_number);;
 print "Welcome to your friendly retirement calculator!\n";
+print "Please enter your name";
+cleanInput(chomp($name = <>),"s");
 print "Please enter your current retirement balance. \$";
-chomp($starting = <>);
+cleanInput(chomp($starting = <>),"n");
 print "Please enter your age: ";
-chomp($age = <>);
+cleanInput(chomp($age = <>),"n");
 print "Please enter the age you wish to retire: ";
-chomp($retireage = <>);
+cleanInput(chomp($retireage = <>),"n");
 print "Please enter dollar amount you will deposit each year. \$";
-chomp($yearlycontrib = <>);
+cleanInput(chomp($yearlycontrib = <>),"n");
 print "Please enter the percentage return you expect: ";
-chomp($returnrate = <>);
+cleanInput(chomp($returnrate = <>),"n");
 $returnrate = $returnrate/100;
 print "Enter amount you wish to reitre with. \$";
-chomp ($retirethresh = <>);
+cleanInput(chomp($retirethresh = <>),"n");
+
 $years = $retireage - $age;
 $t = Time::Piece->new();
 $curryear = $t->year;
+print "$name\n";
 printf("%5s%13s%13s%17s\n", "Year", "Balance(\$)", "Interest(\$)", "New Balance(\$)");
 $i = 0;
 while ($age <= $retireage) {
@@ -36,11 +41,30 @@ if($retirethresh < $starting){
   print "Congradulations you can retire!!!!\n"
 }
 elsif($retirethresh > $starting){
-  $num = 10;
-  while($num--){
-    sleep(1);
-  }
-  print "Boom!!!!..... YOU WILL BE A POOR OLD PERSON!!!!\n";
+  sleep(10);
+  print "Sorry, $name!!!!..... YOU WILL BE A POOR OLD PERSON!!!!\n";
+}
 
+#function to validate input.
+sub cleanInput{
+  @info = @_;
+  if($info[1] == "s") {
+    if(looks_like_number($info[0])) {
+      print "Field requires string. Invalid Entry, try again.\n";
+      die;
+    }
+  }
+  elsif($info[1] == "n") {
+    if(!looks_like_number($info[0])){
+      print "Field requires a number. Invalid Entry";
+      die;
+    }
+  }
+  #elsif($info[1] == "d") {
+  #
+  #}
+  else {
+    print "2nd paramater: Invalid in cleanInput subroutine"
+  }
 }
 
